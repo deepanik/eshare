@@ -24,6 +24,7 @@ export default defineConfig({
         global: 'globalThis',
       },
     },
+    include: ['web3', '@web3modal/ethereum', '@web3modal/react', 'wagmi', 'viem']
   },
   build: {
     outDir: 'dist',
@@ -33,9 +34,13 @@ export default defineConfig({
         manualChunks: {
           vendor: ['react', 'react-dom', 'react-router-dom'],
           mui: ['@mui/material', '@mui/icons-material'],
-          web3: ['web3', '@web3modal/ethereum', '@web3modal/react']
+          web3: ['web3', '@web3modal/ethereum', '@web3modal/react', 'wagmi', 'viem']
         }
       }
+    },
+    commonjsOptions: {
+      include: [/node_modules/],
+      transformMixedEsModules: true
     }
   },
   server: {

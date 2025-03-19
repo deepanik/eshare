@@ -11,12 +11,12 @@
     "start": "node server.js"
   },
   "dependencies": {
-    "@emotion/react": "^11.11.4",
+    "@emotion/react": "^11.11.3",
     "@emotion/styled": "^11.11.0",
     "@lens-protocol/client": "^2.0.0-alpha.26",
-    "@mui/icons-material": "^5.15.12",
+    "@mui/icons-material": "^5.15.10",
     "@mui/lab": "^5.0.0-alpha.167",
-    "@mui/material": "^5.15.12",
+    "@mui/material": "^5.15.10",
     "@tailwindcss/vite": "^4.0.14",
     "@web3modal/ethereum": "^2.7.1",
     "@web3modal/react": "^2.7.1",
@@ -27,23 +27,25 @@
     "crypto-js": "^4.2.0",
     "date-fns": "^4.1.0",
     "eventemitter3": "^5.0.1",
-    "express": "^4.21.2",
-    "framer-motion": "^11.0.8",
+    "express": "^4.18.2",
+    "framer-motion": "^11.0.5",
     "ipfs-http-client": "^60.0.1",
     "jszip": "^3.10.1",
     "openai": "^4.28.4",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-dropzone": "^14.2.3",
-    "react-router-dom": "^7.3.0",
+    "react-router-dom": "^6.22.1",
     "tailwindcss": "^4.0.14",
     "web3": "^4.5.0",
-    "web3.storage": "^4.5.5"
+    "web3.storage": "^4.5.5",
+    "viem": "^1.21.4",
+    "wagmi": "^1.4.13"
   },
   "devDependencies": {
     "@nomicfoundation/hardhat-toolbox": "^4.0.0",
     "@openzeppelin/contracts": "^5.0.1",
-    "@types/react": "^18.2.56",
+    "@types/react": "^18.2.55",
     "@types/react-dom": "^18.2.19",
     "@vitejs/plugin-react": "^4.2.1",
     "dotenv": "^16.4.5",
@@ -52,6 +54,6 @@
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-react-refresh": "^0.4.5",
     "hardhat": "^2.20.1",
-    "vite": "^5.1.4"
+    "vite": "^5.1.0"
   }
 }
