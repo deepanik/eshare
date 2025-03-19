@@ -1,6 +1,10 @@
 import axios from 'axios';
 import { encryptionService } from '../encryption/encryptionService';
 
+const API_URL = import.meta.env.PROD 
+  ? '/api'  // Use relative path in production
+  : 'http://localhost:3000/api';  // Use localhost in development
+
 class FileService {
   constructor() {
     this.apiKey = import.meta.env.VITE_PINATA_API_KEY;
@@ -20,22 +24,33 @@ class FileService {
 
   async getDb() {
     try {
-      const response = await axios.get(this.dbPath);
-      return response.data;
+      const response = await fetch(`${API_URL}/db`);
+      if (!response.ok) {
+        throw new Error('Failed to fetch database');
+      }
+      return await response.json();
     } catch (error) {
-      console.error('Failed to read database:', error);
-      return { files: [], keys: [], shares: [] };
+      console.error('Error fetching database:', error);
+      return { files: [], keys: [] };
     }
   }
 
   async saveDb(db) {
     try {
-      const response = await axios.post(this.dbPath, db);
-      console.log('Database saved successfully:', db);
-      return response.data.success;
+      const response = await fetch(`${API_URL}/db`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(db),
+      });
+      if (!response.ok) {
+        throw new Error('Failed to save database');
+      }
+      return await response.json();
     } catch (error) {
-      console.error('Failed to save database:', error);
-      return false;
+      console.error('Error saving database:', error);
+      throw error;
     }
   }
 
