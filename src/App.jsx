@@ -73,6 +73,144 @@ function App() {
     encryptionKey: '',
   });
 
+  // Add settings state
+  const [settings, setSettings] = useState({
+    theme: 'system',
+    listView: false,
+    defaultEncryption: true,
+    saveEncryptionKeys: true,
+    storageType: 'ipfs',
+    autoDeleteDays: 0,
+    emailNotifications: false,
+    desktopNotifications: true
+  });
+
+  // Theme handling
+  const prefersDarkMode = window.matchMedia('(prefers-color-scheme: dark)');
+  const [mode, setMode] = useState(
+    settings.theme === 'system' 
+      ? (prefersDarkMode.matches ? 'dark' : 'light')
+      : settings.theme
+  );
+
+  useEffect(() => {
+    const handleChange = (e) => {
+      if (settings.theme === 'system') {
+        setMode(e.matches ? 'dark' : 'light');
+      }
+    };
+    prefersDarkMode.addEventListener('change', handleChange);
+    return () => prefersDarkMode.removeEventListener('change', handleChange);
+  }, [settings.theme]);
+
+  // Settings handlers
+  const handleUpdateSettings = (newSettings) => {
+    setSettings(prev => ({ ...prev, ...newSettings }));
+    
+    // Handle theme changes
+    if (newSettings.theme) {
+      if (newSettings.theme === 'system') {
+        setMode(prefersDarkMode.matches ? 'dark' : 'light');
+      } else {
+        setMode(newSettings.theme);
+      }
+    }
+
+    // Handle encryption settings
+    if (newSettings.defaultEncryption !== undefined) {
+      // Update encryption state
+      setEncryptionEnabled(newSettings.defaultEncryption);
+      if (newSettings.defaultEncryption && !encryptionKey) {
+        const newKey = encryptionService.generateEncryptionKey();
+        setEncryptionKey(newKey);
+      } else if (!newSettings.defaultEncryption) {
+        setEncryptionKey(null);
+      }
+    }
+
+    // Handle storage settings
+    if (newSettings.storageType) {
+      // Update the storage type in settings
+      // The actual storage type will be used when uploading files
+      console.log('Storage type updated to:', newSettings.storageType);
+    }
+
+    // Handle notifications
+    if (newSettings.desktopNotifications !== undefined) {
+      if (newSettings.desktopNotifications) {
+        Notification.requestPermission();
+      }
+    }
+  };
+
+  const handleSaveSettings = async (newSettings) => {
+    try {
+      // Save settings to local storage
+      localStorage.setItem('appSettings', JSON.stringify(newSettings));
+      setSettings(newSettings);
+      
+      // Apply immediate settings
+      handleUpdateSettings(newSettings);
+
+      // Update file list view if changed
+      if (newSettings.listView !== settings.listView) {
+        // Trigger file list refresh
+        setRefreshFiles(prev => !prev);
+      }
+
+      // Configure auto-deletion if enabled
+      if (newSettings.autoDeleteDays > 0) {
+        const deleteAfter = newSettings.autoDeleteDays * 24 * 60 * 60 * 1000; // Convert days to milliseconds
+        fileService.setAutoDelete(deleteAfter);
+      } else {
+        fileService.setAutoDelete(null);
+      }
+
+      return true;
+    } catch (error) {
+      console.error('Failed to save settings:', error);
+      throw error;
+    }
+  };
+
+  const handleResetSettings = () => {
+    const defaultSettings = {
+      theme: 'system',
+      listView: false,
+      defaultEncryption: true,
+      saveEncryptionKeys: true,
+      storageType: 'ipfs',
+      autoDeleteDays: 0,
+      emailNotifications: false,
+      desktopNotifications: true
+    };
+
+    setSettings(defaultSettings);
+    localStorage.setItem('appSettings', JSON.stringify(defaultSettings));
+    handleUpdateSettings(defaultSettings);
+  };
+
+  // Load settings from local storage on mount
+  useEffect(() => {
+    const savedSettings = localStorage.getItem('appSettings');
+    if (savedSettings) {
+      const parsedSettings = JSON.parse(savedSettings);
+      setSettings(parsedSettings);
+      handleUpdateSettings(parsedSettings);
+    }
+  }, []);
+
+  // Create theme with current mode
+  const theme = React.useMemo(
+    () =>
+      createTheme({
+        palette: {
+          mode,
+        },
+      }),
+    [mode],
+  );
+
   const customTheme = createTheme({
     palette: {
       mode: themeMode,
@@ -1422,7 +1560,14 @@ function App() {
           <Toolbar />
           <Routes>
             <Route path="/" element={mainContent} />
-            <Route path="/settings" element={<Settings />} />
+            <Route path="/settings" element={
+              <Settings
+                settings={settings}
+                onUpdateSettings={handleUpdateSettings}
+                onSaveSettings={handleSaveSettings}
+                onResetSettings={handleResetSettings}
+              />
+            } />
             <Route path="/help" element={<Help />} />
           </Routes>
         </Box>
