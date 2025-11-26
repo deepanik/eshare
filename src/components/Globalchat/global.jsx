@@ -56,7 +56,7 @@ const GlobalChat = () => {
   const [hasMoreMessages, setHasMoreMessages] = useState(true);
   const inputRef = useRef(null);
   const isLoadingOlderRef = useRef(false);
-  const ADMIN_USERNAME = 'deepanik';
+  const ADMIN_USERNAME = 'deepanik' 'prateek';
   const isAdmin = currentUser?.username === ADMIN_USERNAME;
 
   // Play notification sound
