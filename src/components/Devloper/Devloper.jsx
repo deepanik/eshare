@@ -212,7 +212,7 @@ function Devloper({ themeMode = 'light' }) {
         setCurrentUser(user)
         
         // Check if user is admin (username === 'deepanik')
-        const adminStatus = user?.username === 'deepanik' 'prateek'
+        const adminStatus = user?.username === 'deepanik' || user?.username === 'prateek'
         setIsAdmin(adminStatus)
         
         // Load developer data from database
