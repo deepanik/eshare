@@ -183,11 +183,19 @@ class WalletConnectionService {
       // Add timeout to prevent hanging
       const timeoutPromise = new Promise((_, reject) => {
         setTimeout(() => {
-          reject(new Error('Connection timeout. Please try again.'));
+          reject(new Error('Connection timeout. Please check if your domain is whitelisted in WalletConnect Cloud.'));
         }, 120000); // 2 minute timeout
       });
 
-      await Promise.race([enablePromise, timeoutPromise]);
+      try {
+        await Promise.race([enablePromise, timeoutPromise]);
+      } catch (error) {
+        // Check for 403 or domain-related errors
+        if (error.message?.includes('403') || error.message?.includes('Forbidden') || error.message?.includes('origin not allowed')) {
+          throw new Error('Domain not whitelisted. Please add your domain to WalletConnect Cloud project settings.');
+        }
+        throw error;
+      }
 
       // Wait a bit for accounts to be populated
       await new Promise(resolve => setTimeout(resolve, 1000));
