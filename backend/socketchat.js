@@ -52,6 +52,19 @@ initDatabase();
 app.use(cors());
 app.use(express.json());
 
+// Root endpoint
+app.get('/', (req, res) => {
+  res.json({ 
+    message: 'eShare Backend API',
+    status: 'running',
+    endpoints: {
+      health: '/health',
+      onlineUsers: '/api/online-users',
+      messages: '/api/messages'
+    }
+  });
+});
+
 // Health check endpoint
 app.get('/health', (req, res) => {
   res.json({ status: 'ok', onlineUsers: onlineUsers.size });
