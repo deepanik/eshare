@@ -24,23 +24,33 @@ const allowedOrigins = [
   "https://www.eshare-two.vercel.app"
 ].filter(Boolean); // Remove any undefined values
 
+// Log allowed origins on startup
+console.log('🔒 Allowed CORS origins:', allowedOrigins);
+
 const io = new Server(httpServer, {
   cors: {
     origin: (origin, callback) => {
       // Allow requests with no origin (like mobile apps or curl requests)
-      if (!origin) return callback(null, true);
+      if (!origin) {
+        console.log('✅ CORS: Allowing request with no origin');
+        return callback(null, true);
+      }
       
-      // Normalize origin (remove trailing slash)
-      const normalizedOrigin = origin.endsWith('/') ? origin.slice(0, -1) : origin;
+      // Normalize origin (remove trailing slash, lowercase for comparison)
+      const normalizedOrigin = (origin.endsWith('/') ? origin.slice(0, -1) : origin).toLowerCase();
       
-      // Check if origin is in allowed list (exact match)
-      if (allowedOrigins.some(allowed => {
-        const normalizedAllowed = allowed.endsWith('/') ? allowed.slice(0, -1) : allowed;
+      // Check if origin is in allowed list (case-insensitive match)
+      const isAllowed = allowedOrigins.some(allowed => {
+        const normalizedAllowed = (allowed.endsWith('/') ? allowed.slice(0, -1) : allowed).toLowerCase();
         return normalizedOrigin === normalizedAllowed;
-      })) {
+      });
+      
+      if (isAllowed) {
+        console.log(`✅ CORS: Allowing origin: ${origin}`);
         callback(null, true);
       } else {
-        console.warn(`CORS: Origin not allowed: ${origin}. Allowed: ${allowedOrigins.join(', ')}`);
+        console.warn(`❌ CORS: Origin not allowed: ${origin}`);
+        console.warn(`   Allowed origins: ${allowedOrigins.join(', ')}`);
         callback(new Error('Not allowed by CORS'));
       }
     },
@@ -85,19 +95,24 @@ const expressAllowedOrigins = [
 app.use(cors({
   origin: (origin, callback) => {
     // Allow requests with no origin (like mobile apps or curl requests)
-    if (!origin) return callback(null, true);
+    if (!origin) {
+      return callback(null, true);
+    }
     
-    // Normalize origin (remove trailing slash)
-    const normalizedOrigin = origin.endsWith('/') ? origin.slice(0, -1) : origin;
+    // Normalize origin (remove trailing slash, lowercase for comparison)
+    const normalizedOrigin = (origin.endsWith('/') ? origin.slice(0, -1) : origin).toLowerCase();
     
-    // Check if origin is in allowed list (exact match)
-    if (expressAllowedOrigins.some(allowed => {
-      const normalizedAllowed = allowed.endsWith('/') ? allowed.slice(0, -1) : allowed;
+    // Check if origin is in allowed list (case-insensitive match)
+    const isAllowed = expressAllowedOrigins.some(allowed => {
+      const normalizedAllowed = (allowed.endsWith('/') ? allowed.slice(0, -1) : allowed).toLowerCase();
       return normalizedOrigin === normalizedAllowed;
-    })) {
+    });
+    
+    if (isAllowed) {
       callback(null, true);
     } else {
-      console.warn(`CORS: Origin not allowed: ${origin}. Allowed: ${expressAllowedOrigins.join(', ')}`);
+      console.warn(`❌ Express CORS: Origin not allowed: ${origin}`);
+      console.warn(`   Allowed origins: ${expressAllowedOrigins.join(', ')}`);
       callback(new Error('Not allowed by CORS'));
     }
   },
@@ -218,6 +233,9 @@ app.delete('/api/messages', async (req, res) => {
 });
 
 io.on('connection', (socket) => {
+  // Log connection attempt with origin info
+  const origin = socket.handshake.headers.origin || socket.handshake.headers.referer || 'unknown';
+  console.log(`🔌 New socket connection from origin: ${origin}, socket ID: ${socket.id}`);
 
   // User joins with their user info
   socket.on('user:join', async (userData) => {
@@ -550,5 +568,6 @@ const PORT = process.env.PORT || 3002;
 
 httpServer.listen(PORT, () => {
   console.log(`🚀 Socket.io server running on port ${PORT}`);
-  console.log(`📡 CORS enabled for: ${process.env.FRONTEND_URL || "http://localhost:5173"}`);
+  console.log(`📡 CORS enabled for origins: ${allowedOrigins.join(', ')}`);
+  console.log(`🌐 Frontend URL from env: ${process.env.FRONTEND_URL || 'not set'}`);
 });
