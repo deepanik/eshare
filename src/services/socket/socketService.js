@@ -6,7 +6,7 @@ class SocketService {
     this.socket = null;
     this.isConnected = false;
     this.listeners = new Map();
-    this.serverUrl = import.meta.env.VITE_SOCKET_URL || 'http://localhost:3002';
+    this.serverUrl = import.meta.env.VITE_SOCKET_URL || 'https://eshare-backend.onrender.com/';
   }
 
   /**

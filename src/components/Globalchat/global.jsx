@@ -518,7 +518,7 @@ const GlobalChat = () => {
         // The server will emit 'messages:deleted' event which we're listening to
       } else {
         // Fallback to HTTP API
-        const response = await fetch('http://localhost:3002/api/messages', {
+        const response = await fetch('https://eshare-backend.onrender.comapi/messages', {
           method: 'DELETE',
           headers: {
             'Content-Type': 'application/json'
