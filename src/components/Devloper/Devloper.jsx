@@ -1,3 +1,5 @@
+// Credit // Prateek
+
 import React, { useState, useEffect, useMemo } from 'react'
 import {
   GitHub as GitHubIcon,
@@ -17,6 +19,7 @@ import { authService } from '../../services/auth/authService'
 import { supabase } from '../../services/supabase/supabaseClient'
 
 // Inline CSS to avoid Tailwind import issues
+// credit // prateek
 const styles = `
   * {
     margin: 0;
