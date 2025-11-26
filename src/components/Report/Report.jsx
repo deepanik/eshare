@@ -8,6 +8,7 @@ function Report({ themeMode = 'light' }) {
     if (typeof window !== 'undefined' && window.matchMedia) {
       return window.matchMedia('(prefers-color-scheme: dark)').matches;
     }
+    // credit // Prateek
     return false;
   });
   
@@ -100,6 +101,7 @@ function Report({ themeMode = 'light' }) {
           });
         }
         setOverviewData(restoredData);
+        // credit // Prateek
       }
     } catch (error) {
       console.error('Error loading report data:', error);
@@ -186,6 +188,7 @@ function Report({ themeMode = 'light' }) {
       document.removeEventListener('keydown', handleEscape);
       document.removeEventListener('click', handleClickOutside);
       document.body.style.overflow = 'unset';
+      // credit // Prateek
     };
   }, [selectedDiagram]);
 
@@ -327,6 +330,7 @@ function Report({ themeMode = 'light' }) {
       // Return a more user-friendly error message
       if (error.message) {
         throw new Error(error.message);
+        // credit // Prateek
       }
       
       throw new Error('Failed to upload file. Please check your connection and try again.');
@@ -528,6 +532,7 @@ function Report({ themeMode = 'light' }) {
   const nextCarousel = () => {
     const maxIndex = Math.max(0, overviewData.uml.diagrams.length - itemsPerView);
     setCarouselIndex(prev => {
+      // credit // Prateek
       const next = prev + 1;
       return next > maxIndex ? maxIndex : next;
     });
@@ -745,6 +750,7 @@ function Report({ themeMode = 'light' }) {
     .light .diagram-row {
       background: rgba(255, 255, 255, 0.95);
       border: 1px solid rgba(0, 0, 0, 0.08);
+      
       color: #334155;
     }
 
@@ -1087,6 +1093,7 @@ function Report({ themeMode = 'light' }) {
       }
       
       .popup-close {
+      // credit // Prateek
         width: 35px;
         height: 35px;
         font-size: 16px;
@@ -1213,6 +1220,7 @@ function Report({ themeMode = 'light' }) {
   }
 
   return (
+    // credit // Prateek
     <>
       <style>{styles}</style>
       <div className={darkMode ? 'dark' : 'light'} style={{ minHeight: '100vh' }}>
@@ -1414,6 +1422,7 @@ function Report({ themeMode = 'light' }) {
                     readOnly={!isAdmin}
                   />
                 </div>
+                // credit // Prateek
 
                 {overviewData.video.url && (
                   <div style={{
@@ -1637,6 +1646,7 @@ function Report({ themeMode = 'light' }) {
                     onMouseLeave={(e) => e.target.style.transform = 'scale(1)'}
                   >
                     📥 Download Presentation
+                    // credit // Prateek
                     {overviewData.ppt.fileName && (
                       <span style={{ display: 'block', fontSize: '12px', marginTop: '4px', opacity: 0.9 }}>
                         {overviewData.ppt.fileName}
