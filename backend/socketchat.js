@@ -16,9 +16,34 @@ const supabaseKey = process.env.SUPABASE_SERVICE_KEY || process.env.SUPABASE_ANO
 const supabase = createClient(supabaseUrl, supabaseKey);
 
 // Configure CORS for Socket.io
+// Allow multiple origins for development and production
+const allowedOrigins = [
+  process.env.FRONTEND_URL || "http://localhost:5173",
+  "http://localhost:5173",
+  "https://eshare-two.vercel.app",
+  "https://www.eshare-two.vercel.app"
+].filter(Boolean); // Remove any undefined values
+
 const io = new Server(httpServer, {
   cors: {
-    origin: process.env.FRONTEND_URL || "http://localhost:5173",
+    origin: (origin, callback) => {
+      // Allow requests with no origin (like mobile apps or curl requests)
+      if (!origin) return callback(null, true);
+      
+      // Normalize origin (remove trailing slash)
+      const normalizedOrigin = origin.endsWith('/') ? origin.slice(0, -1) : origin;
+      
+      // Check if origin is in allowed list (exact match)
+      if (allowedOrigins.some(allowed => {
+        const normalizedAllowed = allowed.endsWith('/') ? allowed.slice(0, -1) : allowed;
+        return normalizedOrigin === normalizedAllowed;
+      })) {
+        callback(null, true);
+      } else {
+        console.warn(`CORS: Origin not allowed: ${origin}. Allowed: ${allowedOrigins.join(', ')}`);
+        callback(new Error('Not allowed by CORS'));
+      }
+    },
     methods: ["GET", "POST", "DELETE"],
     credentials: true
   }
@@ -49,7 +74,35 @@ const initDatabase = async () => {
 
 initDatabase();
 
-app.use(cors());
+// Configure CORS for Express
+const expressAllowedOrigins = [
+  process.env.FRONTEND_URL || "http://localhost:5173",
+  "http://localhost:5173",
+  "https://eshare-two.vercel.app",
+  "https://www.eshare-two.vercel.app"
+].filter(Boolean);
+
+app.use(cors({
+  origin: (origin, callback) => {
+    // Allow requests with no origin (like mobile apps or curl requests)
+    if (!origin) return callback(null, true);
+    
+    // Normalize origin (remove trailing slash)
+    const normalizedOrigin = origin.endsWith('/') ? origin.slice(0, -1) : origin;
+    
+    // Check if origin is in allowed list (exact match)
+    if (expressAllowedOrigins.some(allowed => {
+      const normalizedAllowed = allowed.endsWith('/') ? allowed.slice(0, -1) : allowed;
+      return normalizedOrigin === normalizedAllowed;
+    })) {
+      callback(null, true);
+    } else {
+      console.warn(`CORS: Origin not allowed: ${origin}. Allowed: ${expressAllowedOrigins.join(', ')}`);
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  credentials: true
+}));
 app.use(express.json());
 
 // Root endpoint

@@ -6,7 +6,9 @@ class SocketService {
     this.socket = null;
     this.isConnected = false;
     this.listeners = new Map();
-    this.serverUrl = import.meta.env.VITE_SOCKET_URL || 'https://eshare-backend.onrender.com/';
+    // Remove trailing slash if present
+    const baseUrl = import.meta.env.VITE_SOCKET_URL || 'https://eshare-backend.onrender.com';
+    this.serverUrl = baseUrl.endsWith('/') ? baseUrl.slice(0, -1) : baseUrl;
   }
 
   /**
