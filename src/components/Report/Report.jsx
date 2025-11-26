@@ -10,6 +10,8 @@ function Report({ themeMode = 'light' }) {
     }
     return false;
   });
+
+  // credit // Prateek
   
   // Determine if dark mode is active
   const darkMode = useMemo(() => {
@@ -48,6 +50,7 @@ function Report({ themeMode = 'light' }) {
   const [overviewData, setOverviewData] = useState({
     projectTitle: "eShare",
     projectDescription: "",
+    // credit // Prateek
     video: {
       title: "Project Demo Video",
       url: "https://www.youtube.com/embed/dQw4w9WgXcQ",
@@ -163,6 +166,7 @@ function Report({ themeMode = 'light' }) {
     const handleEscape = (e) => {
       if (e.key === 'Escape') {
         setSelectedDiagram(null);
+        // credit // Prateek
       }
     };
 
@@ -266,6 +270,7 @@ function Report({ themeMode = 'light' }) {
       };
       setOverviewData(updatedData);
       await saveReportData(updatedData);
+      // credit // Prateek
     }
   };
 
@@ -432,6 +437,7 @@ function Report({ themeMode = 'light' }) {
         // For documents, convert to base64
         const reader = new FileReader();
         const base64 = await new Promise((resolve, reject) => {
+          // credit // Prateek
           reader.onload = () => resolve(reader.result);
           reader.onerror = reject;
           reader.readAsDataURL(file);
@@ -485,6 +491,7 @@ function Report({ themeMode = 'light' }) {
 
   const closePopup = () => {
     setSelectedDiagram(null);
+    // credit // Prateek
   };
 
   const navigateDiagram = (direction) => {
