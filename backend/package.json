@@ -1,0 +1,17 @@
+{
+  "name": "eshare-backend",
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "start": "node socketchat.js",
+    "dev": "node --watch socketchat.js"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.84.0",
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.3",
+    "emoji-picker-react": "^4.15.2",
+    "express": "^4.21.2",
+    "socket.io": "^4.7.5"
+  }
+}
