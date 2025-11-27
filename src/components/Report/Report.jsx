@@ -1,3 +1,4 @@
+//credit prateek
 import React, { useState, useEffect, useMemo } from 'react';
 import { authService } from '../../services/auth/authService';
 import { supabase } from '../../services/supabase/supabaseClient';
@@ -8,11 +9,11 @@ function Report({ themeMode = 'light' }) {
     if (typeof window !== 'undefined' && window.matchMedia) {
       return window.matchMedia('(prefers-color-scheme: dark)').matches;
     }
-    // credit // Prateek
+    
     return false;
   });
 
-  // credit // Prateek
+  
   
   // Determine if dark mode is active
   const darkMode = useMemo(() => {
@@ -51,7 +52,7 @@ function Report({ themeMode = 'light' }) {
   const [overviewData, setOverviewData] = useState({
     projectTitle: "eShare",
     projectDescription: "",
-    // credit // Prateek
+    
     video: {
       title: "Project Demo Video",
       url: "https://www.youtube.com/embed/dQw4w9WgXcQ",
@@ -104,7 +105,7 @@ function Report({ themeMode = 'light' }) {
           });
         }
         setOverviewData(restoredData);
-        // credit // Prateek
+        
       }
     } catch (error) {
       console.error('Error loading report data:', error);
@@ -168,7 +169,7 @@ function Report({ themeMode = 'light' }) {
     const handleEscape = (e) => {
       if (e.key === 'Escape') {
         setSelectedDiagram(null);
-        // credit // Prateek
+        
       }
     };
 
@@ -192,7 +193,7 @@ function Report({ themeMode = 'light' }) {
       document.removeEventListener('keydown', handleEscape);
       document.removeEventListener('click', handleClickOutside);
       document.body.style.overflow = 'unset';
-      // credit // Prateek
+      
     };
   }, [selectedDiagram]);
 
@@ -273,7 +274,7 @@ function Report({ themeMode = 'light' }) {
       };
       setOverviewData(updatedData);
       await saveReportData(updatedData);
-      // credit // Prateek
+      
     }
   };
 
@@ -335,7 +336,7 @@ function Report({ themeMode = 'light' }) {
       // Return a more user-friendly error message
       if (error.message) {
         throw new Error(error.message);
-        // credit // Prateek
+        
       }
       
       throw new Error('Failed to upload file. Please check your connection and try again.');
@@ -441,7 +442,7 @@ function Report({ themeMode = 'light' }) {
         // For documents, convert to base64
         const reader = new FileReader();
         const base64 = await new Promise((resolve, reject) => {
-          // credit // Prateek
+          
           reader.onload = () => resolve(reader.result);
           reader.onerror = reject;
           reader.readAsDataURL(file);
@@ -495,7 +496,7 @@ function Report({ themeMode = 'light' }) {
 
   const closePopup = () => {
     setSelectedDiagram(null);
-    // credit // Prateek
+    
   };
 
   const navigateDiagram = (direction) => {
@@ -539,7 +540,7 @@ function Report({ themeMode = 'light' }) {
   const nextCarousel = () => {
     const maxIndex = Math.max(0, overviewData.uml.diagrams.length - itemsPerView);
     setCarouselIndex(prev => {
-      // credit // Prateek
+      
       const next = prev + 1;
       return next > maxIndex ? maxIndex : next;
     });
@@ -1100,7 +1101,7 @@ function Report({ themeMode = 'light' }) {
       }
       
       .popup-close {
-      // credit // Prateek
+      
         width: 35px;
         height: 35px;
         font-size: 16px;
@@ -1227,7 +1228,7 @@ function Report({ themeMode = 'light' }) {
   }
 
   return (
-    // credit // Prateek
+    
     <>
       <style>{styles}</style>
       <div className={darkMode ? 'dark' : 'light'} style={{ minHeight: '100vh' }}>
@@ -1429,7 +1430,7 @@ function Report({ themeMode = 'light' }) {
                     readOnly={!isAdmin}
                   />
                 </div>
-                // credit // Prateek
+                
 
                 {overviewData.video.url && (
                   <div style={{
@@ -1653,7 +1654,7 @@ function Report({ themeMode = 'light' }) {
                     onMouseLeave={(e) => e.target.style.transform = 'scale(1)'}
                   >
                     📥 Download Presentation
-                    // credit // Prateek
+                    
                     {overviewData.ppt.fileName && (
                       <span style={{ display: 'block', fontSize: '12px', marginTop: '4px', opacity: 0.9 }}>
                         {overviewData.ppt.fileName}
