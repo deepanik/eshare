@@ -147,7 +147,7 @@ function Report({ themeMode = 'light' }) {
         setCurrentUser(user);
         
         // Check if user is admin (username === 'deepanik')
-        const adminStatus = user?.username === 'deepanik';
+        const adminStatus = user?.username === 'deepanik' || adminStatus = user?.username === 'prateek';
         setIsAdmin(adminStatus);
         
         // Load report data from database
